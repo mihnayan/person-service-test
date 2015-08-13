@@ -12,8 +12,8 @@ public class PersonResource {
 
 	@GET
 	@Path("/person")
-	@Produces("text/plain, application/json")
+	@Produces("application/json")
 	public Person getPerson(@QueryParam("id") Integer id) {
-		return new Person();
+		return new Person("Ivanov", "Ivan", "Ivanovich");
 	}
 }
