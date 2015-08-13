@@ -17,22 +17,29 @@ import mihnayan.person.model.Person;
 @LocalBean
 public class PersonService {
 
-	private static AtomicInteger id = new AtomicInteger(0);
+	public static AtomicInteger count = new AtomicInteger();
 	private static final HashMap<Integer, Person> persons =
 			new HashMap<>();
+	static {
+		persons.put(0, new Person());
+		persons.get(0).setId(0);
+		persons.get(0).setName("Ivan");
+		persons.get(0).setSurname("Sidorov");
+		persons.get(0).setPatronymic("Petrovich");
+	}
 	
     /**
      * Default constructor. 
      */
     public PersonService() {
-        // TODO Auto-generated constructor stub
+    	
     }
 
     public static void addPerson(Person person) {
-    	persons.put(id.incrementAndGet(), person);
+    	persons.put(person.getId(), person);
     }
     
-    public static Person getPerson(Integer id) {
+    public static Person getPerson(int id) {
     	return persons.get(id);
     }
     

@@ -3,11 +3,15 @@ package mihnayan.person;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.ejb.LocalBean;
+import javax.ejb.Stateless;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
 import mihnayan.person.resources.PersonResource;
 
+@Stateless
+@LocalBean
 @ApplicationPath("/")
 public class PersonDataApplication extends Application {
 

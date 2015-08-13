@@ -1,19 +1,35 @@
 package mihnayan.person.resources;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
 
+import mihnayan.person.ejb.PersonService;
 import mihnayan.person.model.Person;
 
 @Path("/")
 public class PersonResource {
 
 	@GET
-	@Path("/person")
+	@Path("{id}")
 	@Produces("application/json")
-	public Person getPerson(@QueryParam("id") Integer id) {
-		return new Person("Ivanov", "Ivan", "Ivanovich");
+	public Person getPerson(@PathParam("id") int id) {
+		Person person = PersonService.getPerson(id);
+		if (person == null) {
+			throw new WebApplicationException(Response.Status.NOT_FOUND);
+		}
+		return person;
+	}
+	
+	@POST
+	@Consumes("application/json")
+	public void createPerson(Person person) {
+		person.setId(PersonService.count.incrementAndGet());
+		PersonService.addPerson(person);
 	}
 }
