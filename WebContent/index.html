@@ -5,19 +5,65 @@
 <title>Person service test</title>
 </head>
 <style>
-	table {
+	div#toolbox {
+		background-color: #e7f0fa;
+		max-width: 800px;
+		margin-bottom: 3px;
+	}
+	div#command-buttons {
+		text-align: right;	
+	}
+	div#toolbox form {
+		margin: 5px;
+		display: none;
+	}
+	table#person-table {
 		border-collapse: collapse;
 	}
 	
-	th, td {
+	table#person-table th, table#person-table td {
 		border: 1px solid #ccc;
 		padding: 2px;
 	}
 </style>
 <body>
-	<h2>Hello to Person Service Test project!</h2>
+	<h2>Добро пожаловать в проект "Person Service Test"!</h2>
 	
 	<div id="content">
+		<div id="toolbox">
+			<div id="command-buttons">
+				<button onclick="showForm()">Добавить</button>
+				<button onclick="">Редактировать</button>
+				<button>Удалить</button>
+			</div>
+			
+			<form id="edit-form">
+				<table>
+					<tr>
+						<td><label for="id-text">Идентификатор</label></td>
+						<td><input type="text" id="id-text" disabled></td>
+					</tr>
+					<tr>
+						<td><label for="surname-text">Фамилия</label></td>
+						<td><input type="text" id="surname-text"></td>
+					</tr>
+					<tr>
+						<td><label for="name-text">Имя</label></td>
+						<td><input type="text" id="name-text"></td>
+					</tr>
+					<tr>
+						<td><label for="patronymic-text">Отчество</label></td>
+						<td><input type="text" id="patronymic-text"></td>
+					</tr>
+					<tr>
+						<td><label for="borndate-text">Дата рождения</label></td>
+						<td><input type="text" id="borndate-text"></td>
+					</tr>
+				</table>
+				<button onclick="hideForm()">Отправить</button>
+			</form>
+		</div>
+	
 		<table id="person-table"></table>
 	
 	</div>

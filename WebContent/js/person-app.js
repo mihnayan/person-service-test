@@ -76,7 +76,13 @@ var getTable = function (tableId) {
 
                 for (var j = 0, nj = fieldNames.length; j < nj; j++) {
                     var td = document.createElement("td");
-                    td.innerHTML = data[i][fieldNames[j]];
+                    
+                    var fieldName = fieldNames[j];
+                    var text = data[i][fieldName];
+                    if (fieldName === 'id') {
+                    	text = '<input type="radio" name="personId" value=\"' + text + '\">' + text;
+                    }
+                    td.innerHTML = text;
                     tr.appendChild(td);
                 }
                 body.appendChild(tr);
@@ -92,7 +98,15 @@ var getTable = function (tableId) {
     };
 }
 
+var showForm = function () {
+	$('#command-buttons button').attr('disabled', 'disabled');
+	$('#edit-form').show();
+}
 
+var hideForm = function () {
+	$('#edit-form').hide();
+	$('#command-buttons button').removeAttr('disabled');
+}
 
 $(document).ready(function () {
 	console.log('document ready!');
