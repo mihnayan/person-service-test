@@ -12,7 +12,7 @@ import mihnayan.person.resources.PersonResource;
 
 @Stateless
 @LocalBean
-@ApplicationPath("/")
+@ApplicationPath("/service")
 public class PersonDataApplication extends Application {
 
 	@Override
