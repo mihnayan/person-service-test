@@ -1,5 +1,7 @@
 package mihnayan.person.resources;
 
+import java.util.List;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -15,6 +17,13 @@ import mihnayan.person.model.Person;
 @Path("/")
 public class PersonResource {
 
+	@GET
+	@Path("/")
+	@Produces("application/json")
+	public List<Person> getPersons() {
+		return PersonService.getPersons();
+	}
+	
 	@GET
 	@Path("{id}")
 	@Produces("application/json")
