@@ -13,19 +13,27 @@ var personModel = (function () {
 		 */
 		persons: function (callback) {
         
-			var url = '/person/service';
+			var url = "/person/service";
         
 			$.get(url, function (data, textStatus, xhr) {
-				if (textStatus !== 'success') {
-					console.log('Persons request error! textStatus: ' + textStatus);
+				if (textStatus !== "success") {
+					console.log("Persons request error! textStatus: " + textStatus);
 				}
-				if (typeof callback === 'function') {
+				if (typeof callback === "function") {
 					callback(data);
 				}
-			}, 'json');
+			}, "json");
 		}
 	}
 }());
+
+var timestampToDate = function (timestamp) {
+	var leadZero = function (digit) {
+		return digit > 9 ? digit : "0" + digit;
+	}
+	var dt = new Date(timestamp);
+	return leadZero(dt.getDate()) + "." + leadZero(dt.getMonth()) + "." + dt.getFullYear();
+}
 
 var getTable = function (tableId) {
 
@@ -67,7 +75,8 @@ var getTable = function (tableId) {
             return self;
         };
 
-        this.setBody = function (data, fieldNames) {
+        this.setBody = function (data) {
+        	var fieldNames = ["id", "surname", "name", "patronymic", "bornDate"];
             var body = document.createElement("tbody");
             for (var i = 0, ni = data.length; i < ni; i++) {
                 var tr = document.createElement("tr");
@@ -79,8 +88,11 @@ var getTable = function (tableId) {
                     
                     var fieldName = fieldNames[j];
                     var text = data[i][fieldName];
-                    if (fieldName === 'id') {
-                    	text = '<input type="radio" name="personId" value=\"' + text + '\">' + text;
+                    if (fieldName === "id") {
+                    	text = "<input type=\"radio\" name=\"personId\" value=\"" + text + "\">" + text;
+                    }
+                    if (fieldName === "bornDate") {
+                    	text = timestampToDate(text);
                     }
                     td.innerHTML = text;
                     tr.appendChild(td);
@@ -99,26 +111,18 @@ var getTable = function (tableId) {
 }
 
 var showForm = function () {
-	$('#command-buttons button').attr('disabled', 'disabled');
-	$('#edit-form').show();
+	$("#command-buttons button").attr("disabled", "disabled");
+	$("#edit-form").show();
 }
 
 var hideForm = function () {
-	$('#edit-form').hide();
-	$('#command-buttons button').removeAttr('disabled');
-}
-
-var timestampToDate = function (timestamp) {
-	var leadZero = function (digit) {
-		return digit > 9 ? digit : "0" + digit;
-	}
-	var dt = new Date(timestamp);
-	return leadZero(dt.getDate()) + '.' + leadZero(dt.getMonth()) + "." + dt.getFullYear();
+	$("#edit-form").hide();
+	$("#command-buttons button").removeAttr("disabled");
 }
 
 $(document).ready(function () {
-	console.log('document ready!');
-	var tbl = getTable('person-table');
+	console.log("document ready!");
+	var tbl = getTable("person-table");
 	tbl.setHead(
 			["Идентификатор", 
 			 "Фамилия", 
@@ -126,8 +130,7 @@ $(document).ready(function () {
 			 "Отчество", 
 			 "Дата рождения"]);
 	personModel.persons(function (data) {
-		data["bornDate"] = timestampToDate(data["bornDate"]);
-		tbl.setBody(data, ["id", "surname", "name", "patronymic", "bornDate"]);
+		tbl.setBody(data);
 	});
 });
 
