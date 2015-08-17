@@ -46,6 +46,11 @@ var timestampToDate = function (timestamp) {
 	return leadZero(dt.getDate()) + "." + leadZero(dt.getMonth()) + "." + dt.getFullYear();
 }
 
+var dateToTimestamp = function (dateString) {
+	var normalDate = dateString.split(".").reverse().join("-");
+	return (new Date(normalDate)).getTime();
+}
+
 var getTable = function (tableId) {
 
     return new function () {
@@ -137,7 +142,7 @@ var sendFormData = function () {
 	$("form#edit-form input").each(function (i, e) {
 		person[e.getAttribute("name")] = e.value;
 	});
-	console.log(person);
+	person["bornDate"] = dateToTimestamp(person["bornDate"]);
 	personModel.addPerson(person, function (data) {
 		console.log(data);
 	});
