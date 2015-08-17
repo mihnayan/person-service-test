@@ -108,6 +108,14 @@ var hideForm = function () {
 	$('#command-buttons button').removeAttr('disabled');
 }
 
+var timestampToDate = function (timestamp) {
+	var leadZero = function (digit) {
+		return digit > 9 ? digit : "0" + digit;
+	}
+	var dt = new Date(timestamp);
+	return leadZero(dt.getDate()) + '.' + leadZero(dt.getMonth()) + "." + dt.getFullYear();
+}
+
 $(document).ready(function () {
 	console.log('document ready!');
 	var tbl = getTable('person-table');
@@ -118,6 +126,7 @@ $(document).ready(function () {
 			 "Отчество", 
 			 "Дата рождения"]);
 	personModel.persons(function (data) {
+		data["bornDate"] = timestampToDate(data["bornDate"]);
 		tbl.setBody(data, ["id", "surname", "name", "patronymic", "bornDate"]);
 	});
 });
