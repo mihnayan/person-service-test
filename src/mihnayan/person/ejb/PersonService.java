@@ -1,6 +1,7 @@
 package mihnayan.person.ejb;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -26,6 +27,7 @@ public class PersonService {
 		persons.get(0).setName("Ivan");
 		persons.get(0).setSurname("Sidorov");
 		persons.get(0).setPatronymic("Petrovich");
+		persons.get(0).setBornDate(new Date());
 	}
 	
     /**
