@@ -6,14 +6,14 @@
 
 var personModel = (function () {
 
+	var url = "/person/service";
+	
 	return {
 		/**
 		 * Asynchronous request for all persons
 		 * @param callback Callback function that will handle received data
 		 */
 		persons: function (callback) {
-        
-			var url = "/person/service";
         
 			$.get(url, function (data, textStatus, xhr) {
 				if (textStatus !== "success") {
@@ -23,6 +23,17 @@ var personModel = (function () {
 					callback(data);
 				}
 			}, "json");
+		},
+		
+		addPerson: function (data, callback) {
+			$.post(url, data, function (data, textStatus, xhr) {
+				if (textStatus !== "success") {
+					console.log("Add person error! textStatus: " + textStatus);
+				}
+				if (typeof callback === "function") {
+					callback(data);
+				}
+			}, "text")
 		}
 	}
 }());
@@ -112,12 +123,24 @@ var getTable = function (tableId) {
 
 var showForm = function () {
 	$("#command-buttons button").attr("disabled", "disabled");
-	$("#edit-form").show();
+	$("div#form").show();
 }
 
 var hideForm = function () {
-	$("#edit-form").hide();
+	$("div#form").hide();
 	$("#command-buttons button").removeAttr("disabled");
+}
+
+var sendFormData = function () {
+	hideForm();
+	var person = {};
+	$("form#edit-form input").each(function (i, e) {
+		person[e.getAttribute("name")] = e.value;
+	});
+	console.log(person);
+	personModel.addPerson(person, function (data) {
+		console.log(data);
+	});
 }
 
 $(document).ready(function () {

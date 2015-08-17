@@ -13,7 +13,7 @@
 	div#command-buttons {
 		text-align: right;	
 	}
-	div#toolbox form {
+	div#form {
 		margin: 5px;
 		display: none;
 	}
@@ -36,32 +36,33 @@
 				<button onclick="">Редактировать</button>
 				<button>Удалить</button>
 			</div>
-			
-			<form id="edit-form">
-				<table>
-					<tr>
-						<td><label for="id-text">Идентификатор</label></td>
-						<td><input type="text" id="id-text" disabled></td>
-					</tr>
-					<tr>
-						<td><label for="surname-text">Фамилия</label></td>
-						<td><input type="text" id="surname-text"></td>
-					</tr>
-					<tr>
-						<td><label for="name-text">Имя</label></td>
-						<td><input type="text" id="name-text"></td>
-					</tr>
-					<tr>
-						<td><label for="patronymic-text">Отчество</label></td>
-						<td><input type="text" id="patronymic-text"></td>
-					</tr>
-					<tr>
-						<td><label for="borndate-text">Дата рождения</label></td>
-						<td><input type="text" id="borndate-text"></td>
-					</tr>
-				</table>
-				<button onclick="hideForm()">Отправить</button>
-			</form>
+			<div id="form">
+				<form id="edit-form">
+					<table>
+						<tr>
+							<td><label for="id-text">Идентификатор</label></td>
+							<td><input type="text" id="id-text" name="id" disabled value="0"></td>
+						</tr>
+						<tr>
+							<td><label for="surname-text">Фамилия</label></td>
+							<td><input type="text" id="surname-text" name="surname"></td>
+						</tr>
+						<tr>
+							<td><label for="name-text">Имя</label></td>
+							<td><input type="text" id="name-text" name="name"></td>
+						</tr>
+						<tr>
+							<td><label for="patronymic-text">Отчество</label></td>
+							<td><input type="text" id="patronymic-text" name="patronymic"></td>
+						</tr>
+						<tr>
+							<td><label for="borndate-text">Дата рождения</label></td>
+							<td><input type="text" id="borndate-text" name="bornDate"></td>
+						</tr>
+					</table>
+				</form>
+				<button onclick="sendFormData()">Отправить</button>
+			</div>
 		</div>
 	
 		<table id="person-table"></table>
