@@ -31,7 +31,7 @@ var personModel = (function () {
 				type: "post",
 				data: sentData,
 				contentType: "application/json; charset=utf-8",
-				dataType: "text",
+				dataType: "json",
 				success: function (data, textStatus, xhr) {
 					if (typeof callback === "function") {
 						callback(data);
@@ -55,35 +55,43 @@ var dateToTimestamp = function (dateString) {
 	return (new Date(normalDate)).getTime();
 }
 
-var getTable = function (tableId) {
+var personTable = (function () {
 
-    return new function () {
-        var table = document.getElementById(tableId);
-        var self = this;
+	var table = document.getElementById("person-table");
+	var fieldNames = ["id", "surname", "name", "patronymic", "bornDate"];
+	
+    var tbody = null;
+    var hf = {
+        thead: null,
+        tfoot: null
+    };
 
-        var tbody = null;
-        var hf = {
-            thead: null,
-            tfoot: null
-        };
+    var setHeadFootRow = function (cells, tableElement) {
+        var newElement = document.createElement(tableElement);
 
-        var setHeadFootRow = function (cells, tableElement) {
-            var newElement = document.createElement(tableElement);
-
-            var tr = document.createElement("tr");
-            for (var i = 0, n = cells.length; i < n; i++) {
-                var th = document.createElement("th");
-                th.innerHTML = cells[i];
-                tr.appendChild(th);
-            }
-            newElement.appendChild(tr);
-            if (hf[tableElement] !== null) {
-                table.replaceChild(newElement, hf[tableElement]);
-            } else {
-                table.appendChild(newElement);
-            }
-            hf[tableElement] = newElement;
+        var tr = document.createElement("tr");
+        for (var i = 0, n = cells.length; i < n; i++) {
+            var th = document.createElement("th");
+            th.innerHTML = cells[i];
+            tr.appendChild(th);
         }
+        newElement.appendChild(tr);
+        if (hf[tableElement] !== null) {
+            table.replaceChild(newElement, hf[tableElement]);
+        } else {
+            table.appendChild(newElement);
+        }
+        hf[tableElement] = newElement;
+    };
+    
+    setHeadFootRow(["Идентификатор", 
+			 "Фамилия", 
+			 "Имя", 
+			 "Отчество", 
+			 "Дата рождения"], "thead");
+	
+    return new function () {
+        var self = this;
 
         this.setHead = function (headCells) {
             setHeadFootRow(headCells, "thead");
@@ -96,13 +104,12 @@ var getTable = function (tableId) {
         };
 
         this.setBody = function (data) {
-        	var fieldNames = ["id", "surname", "name", "patronymic", "bornDate"];
             var body = document.createElement("tbody");
             for (var i = 0, ni = data.length; i < ni; i++) {
                 var tr = document.createElement("tr");
                 var trClass = i%2 === 0 ? "odd" : "even";
                 tr.setAttribute("class", trClass);
-
+                
                 for (var j = 0, nj = fieldNames.length; j < nj; j++) {
                     var td = document.createElement("td");
                     
@@ -115,7 +122,8 @@ var getTable = function (tableId) {
                     tr.appendChild(td);
                 }
                 body.appendChild(tr);
-            };
+            }
+
             if (tbody !== null) {
                 table.replaceChild(body, tbody);
             } else {
@@ -125,7 +133,7 @@ var getTable = function (tableId) {
             return self;
         };
     };
-}
+}());
 
 var showForm = function () {
 	$("#command-buttons button").attr("disabled", "disabled");
@@ -145,20 +153,13 @@ var sendFormData = function () {
 	});
 	person["bornDate"] = dateToTimestamp(person["bornDate"]);
 	personModel.addPerson(JSON.stringify(person), function (data) {
-		console.log(data);
+		personTable.setBody(data);
 	});
 }
 
 $(document).ready(function () {
-	var tbl = getTable("person-table");
-	tbl.setHead(
-			["Идентификатор", 
-			 "Фамилия", 
-			 "Имя", 
-			 "Отчество", 
-			 "Дата рождения"]);
 	personModel.persons(function (data) {
-		tbl.setBody(data);
+		personTable.setBody(data);
 	});
 });
 
