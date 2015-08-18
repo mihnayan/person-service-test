@@ -25,15 +25,19 @@ var personModel = (function () {
 			}, "json");
 		},
 		
-		addPerson: function (data, callback) {
-			$.post(url, data, function (data, textStatus, xhr) {
-				if (textStatus !== "success") {
-					console.log("Add person error! textStatus: " + textStatus);
+		addPerson: function (sentData, callback) {
+			$.ajax({
+				url: url,
+				type: "post",
+				data: sentData,
+				contentType: "application/json; charset=utf-8",
+				dataType: "text",
+				success: function (data, textStatus, xhr) {
+					if (typeof callback === "function") {
+						callback(data);
+					}
 				}
-				if (typeof callback === "function") {
-					callback(data);
-				}
-			}, "text")
+			})
 		}
 	}
 }());
@@ -43,7 +47,7 @@ var timestampToDate = function (timestamp) {
 		return digit > 9 ? digit : "0" + digit;
 	}
 	var dt = new Date(timestamp);
-	return leadZero(dt.getDate()) + "." + leadZero(dt.getMonth()) + "." + dt.getFullYear();
+	return leadZero(dt.getDate()) + "." + leadZero(dt.getMonth() + 1) + "." + dt.getFullYear();
 }
 
 var dateToTimestamp = function (dateString) {
@@ -104,9 +108,6 @@ var getTable = function (tableId) {
                     
                     var fieldName = fieldNames[j];
                     var text = data[i][fieldName];
-                    if (fieldName === "id") {
-                    	text = "<input type=\"radio\" name=\"personId\" value=\"" + text + "\">" + text;
-                    }
                     if (fieldName === "bornDate") {
                     	text = timestampToDate(text);
                     }
@@ -138,18 +139,17 @@ var hideForm = function () {
 
 var sendFormData = function () {
 	hideForm();
-	var person = {};
+	var person = {"id": 0};
 	$("form#edit-form input").each(function (i, e) {
 		person[e.getAttribute("name")] = e.value;
 	});
 	person["bornDate"] = dateToTimestamp(person["bornDate"]);
-	personModel.addPerson(person, function (data) {
+	personModel.addPerson(JSON.stringify(person), function (data) {
 		console.log(data);
 	});
 }
 
 $(document).ready(function () {
-	console.log("document ready!");
 	var tbl = getTable("person-table");
 	tbl.setHead(
 			["Идентификатор", 

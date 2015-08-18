@@ -27,7 +27,7 @@ public class PersonService {
 		persons.get(0).setName("Ivan");
 		persons.get(0).setSurname("Sidorov");
 		persons.get(0).setPatronymic("Petrovich");
-		persons.get(0).setBornDate(new Date());
+		persons.get(0).setBornDate((new Date()).getTime());
 	}
 	
     /**

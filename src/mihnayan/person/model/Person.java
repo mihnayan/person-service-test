@@ -1,7 +1,5 @@
 package mihnayan.person.model;
 
-import java.util.Date;
-
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -17,7 +15,7 @@ public class Person {
 	@XmlElement
 	private String patronymic;
 	@XmlElement
-	private Date bornDate;
+	private long bornDate;
 	
 	public Person() {
 		
@@ -47,11 +45,11 @@ public class Person {
 		this.patronymic = patronymic;
 	}
 
-	public Date getBornDate() {
+	public long getBornDate() {
 		return bornDate;
 	}
 
-	public void setBornDate(Date bornDate) {
+	public void setBornDate(long bornDate) {
 		this.bornDate = bornDate;
 	}
 
