@@ -138,12 +138,18 @@ var personTable = (function () {
 var showForm = function () {
 	$("#command-buttons button").attr("disabled", "disabled");
 	$("div#form").show();
-}
+};
 
 var hideForm = function () {
 	$("div#form").hide();
 	$("#command-buttons button").removeAttr("disabled");
-}
+};
+
+var clearForm = function () {
+	$("form#edit-form input").each(function (i, e) {
+		e.value = "";
+	});
+};
 
 var sendFormData = function () {
 	hideForm();
@@ -155,6 +161,7 @@ var sendFormData = function () {
 	personModel.addPerson(JSON.stringify(person), function (data) {
 		personTable.setBody(data);
 	});
+	clearForm();
 }
 
 $(document).ready(function () {
