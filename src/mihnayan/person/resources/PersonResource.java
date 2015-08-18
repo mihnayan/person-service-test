@@ -36,9 +36,12 @@ public class PersonResource {
 	}
 	
 	@POST
+	@Path("/")
 	@Consumes("application/json")
-	public void createPerson(Person person) {
-		person.setId(PersonService.count.incrementAndGet());
+	@Produces("application/json")
+	public List<Person> createPerson(Person person) {
+		person.setId(PersonService.nextId());
 		PersonService.addPerson(person);
+		return PersonService.getPersons();
 	}
 }
