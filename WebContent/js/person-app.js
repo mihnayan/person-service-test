@@ -158,6 +158,13 @@ var sendFormData = function () {
 }
 
 $(document).ready(function () {
+	new JsDatePick({
+		useMode: 2,
+		target: "borndate-text",
+		dateFormat: "%d.%m.%Y",
+		limitToToday: true
+	});
+	
 	personModel.persons(function (data) {
 		personTable.setBody(data);
 	});
