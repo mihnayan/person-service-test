@@ -45,10 +45,15 @@
 		<div id="toolbox">
 			<div id="command-buttons">
 				<button onclick="showForm()">Добавить</button>
+				<button onclick="loadFormData()">Редактировать</button>
 			</div>
 			<div id="form">
 				<form id="edit-form">
 					<table>
+						<tr>
+							<td>ID</td>
+							<td><input type="text" id="id-text" name="id" disabled value="0"></td>
+						</tr>
 						<tr>
 							<td><label for="surname-text">Фамилия</label></td>
 							<td><input type="text" id="surname-text" name="surname" placeholder="Фамилия"></td>

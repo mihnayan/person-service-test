@@ -4,9 +4,33 @@
 
 "use strict";
 
+var timestampToDate = function (timestamp) {
+	var leadZero = function (digit) {
+		return digit > 9 ? digit : "0" + digit;
+	}
+	var dt = new Date(timestamp);
+	return leadZero(dt.getDate()) + "." + leadZero(dt.getMonth() + 1) + "." + dt.getFullYear();
+}
+
+var dateToTimestamp = function (dateString) {
+	var normalDate = dateString.split(".").reverse().join("-");
+	return (new Date(normalDate)).getTime();
+}
+
 var personModel = (function () {
 
 	var url = "/person/service";
+	
+	var convertBornDate = function (data) {
+		if ($.isArray(data)) {
+			for (var i = 0; i < data.length; i++) {
+				data[i]["bornDate"] = timestampToDate(data[i]["bornDate"]);
+			}
+		}
+		if ($.isPlainObject(data)) {
+			data["bornDate"] = timestampToDate(data["bornDate"]);
+		}
+	};
 	
 	return {
 		/**
@@ -18,7 +42,22 @@ var personModel = (function () {
 			$.get(url, function (data, textStatus, xhr) {
 				if (textStatus !== "success") {
 					console.log("Persons request error! textStatus: " + textStatus);
+					return;
 				}
+				convertBornDate(data);
+				if (typeof callback === "function") {
+					callback(data);
+				}
+			}, "json");
+		},
+		
+		getPerson: function (id, callback) {
+			$.get(url + "/" + id, function (data, textStatus, xhr) {
+				if (textStatus !== "success") {
+					console.log("Persons request error! textStatus: " + textStatus);
+					return;
+				}
+				convertBornDate(data);
 				if (typeof callback === "function") {
 					callback(data);
 				}
@@ -33,6 +72,7 @@ var personModel = (function () {
 				contentType: "application/json; charset=utf-8",
 				dataType: "json",
 				success: function (data, textStatus, xhr) {
+					convertBornDate(data);
 					if (typeof callback === "function") {
 						callback(data);
 					}
@@ -41,19 +81,6 @@ var personModel = (function () {
 		}
 	}
 }());
-
-var timestampToDate = function (timestamp) {
-	var leadZero = function (digit) {
-		return digit > 9 ? digit : "0" + digit;
-	}
-	var dt = new Date(timestamp);
-	return leadZero(dt.getDate()) + "." + leadZero(dt.getMonth() + 1) + "." + dt.getFullYear();
-}
-
-var dateToTimestamp = function (dateString) {
-	var normalDate = dateString.split(".").reverse().join("-");
-	return (new Date(normalDate)).getTime();
-}
 
 var personTable = (function () {
 
@@ -84,10 +111,7 @@ var personTable = (function () {
         hf[tableElement] = newElement;
     };
     
-    setHeadFootRow(["Идентификатор", 
-			 "Фамилия", 
-			 "Имя", 
-			 "Отчество", 
+    setHeadFootRow([" ", "ID", "Фамилия", "Имя", "Отчество", 
 			 "Дата рождения"], "thead");
 	
     return new function () {
@@ -110,14 +134,16 @@ var personTable = (function () {
                 var trClass = i%2 === 0 ? "odd" : "even";
                 tr.setAttribute("class", trClass);
                 
+                var radioCell = document.createElement("td");
+                radioCell.innerHTML = "<input type=\"radio\" name=\"personId\" value=\""
+                	+ data[i]["id"] + "\">";
+                tr.appendChild(radioCell);
+                
                 for (var j = 0, nj = fieldNames.length; j < nj; j++) {
                     var td = document.createElement("td");
                     
                     var fieldName = fieldNames[j];
                     var text = data[i][fieldName];
-                    if (fieldName === "bornDate") {
-                    	text = timestampToDate(text);
-                    }
                     td.innerHTML = text;
                     tr.appendChild(td);
                 }
@@ -151,9 +177,23 @@ var clearForm = function () {
 	});
 };
 
+var loadFormData = function (id) {
+	var selected = $("input:radio[name='personId']:checked");
+	if (selected.lenght <= 0) {
+		return;
+	}
+	var selectedId = selected.val();
+	personModel.getPerson(selectedId, function (data) {
+		$("form#edit-form input").each(function (i, e) {
+			e.value = data[e.getAttribute("name")];
+		});
+		showForm();
+	});
+};
+
 var sendFormData = function () {
 	hideForm();
-	var person = {"id": 0};
+	var person = {};
 	$("form#edit-form input").each(function (i, e) {
 		person[e.getAttribute("name")] = e.value;
 	});
@@ -162,6 +202,10 @@ var sendFormData = function () {
 		personTable.setBody(data);
 	});
 	clearForm();
+}
+
+var editPersonData = function () {
+	
 }
 
 $(document).ready(function () {
