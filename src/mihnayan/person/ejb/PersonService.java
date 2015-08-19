@@ -22,17 +22,6 @@ public class PersonService {
 	private static final AtomicInteger count = new AtomicInteger();
 	private static final HashMap<Integer, Person> persons =
 			new HashMap<>();
-	static {
-		Person p = new Person();
-		p.setId(count.incrementAndGet());
-		p.setSurname("Сидоров");
-		p.setName("Иван");
-		p.setPatronymic("Петрович");
-
-		int msInDay = 24 * 60 * 60 * 1_000;
-		p.setBornDate(msInDay * LocalDate.of(1981, 6, 26).toEpochDay());
-		persons.put(p.getId(), p);
-	}
 	
     /**
      * Default constructor. 
