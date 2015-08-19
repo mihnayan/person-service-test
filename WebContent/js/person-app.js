@@ -4,24 +4,24 @@
 
 "use strict";
 
-var timestampToDate = function (timestamp) {
-	var leadZero = function (digit) {
-		return digit > 9 ? digit : "0" + digit;
-	}
-	var dt = new Date(timestamp);
-	return leadZero(dt.getDate()) + "." + leadZero(dt.getMonth() + 1) + "." + dt.getFullYear();
-}
-
-var dateToTimestamp = function (dateString) {
-	var normalDate = dateString.split(".").reverse().join("-");
-	return (new Date(normalDate)).getTime();
-}
-
 var personModel = (function () {
 
 	var url = "/person/service";
 	
-	var convertBornDate = function (data) {
+	var timestampToDate = function (timestamp) {
+		var leadZero = function (digit) {
+			return digit > 9 ? digit : "0" + digit;
+		}
+		var dt = new Date(timestamp);
+		return leadZero(dt.getDate()) + "." + leadZero(dt.getMonth() + 1) + "." + dt.getFullYear();
+	};
+
+	var dateToTimestamp = function (dateString) {
+		var normalDate = dateString.split(".").reverse().join("-");
+		return (new Date(normalDate)).getTime();
+	};
+	
+	var decodeBornDate = function (data) {
 		if ($.isArray(data)) {
 			for (var i = 0; i < data.length; i++) {
 				data[i]["bornDate"] = timestampToDate(data[i]["bornDate"]);
@@ -32,9 +32,15 @@ var personModel = (function () {
 		}
 	};
 	
+	var encodeBornDate = function (data) {
+		if ($.isPlainObject(data)) {
+			data["bornDate"] = dateToTimestamp(data["bornDate"]);
+		}
+	}
+	
 	return {
 		/**
-		 * Asynchronous request for all persons
+		 * Asynchronous request for all persons.
 		 * @param callback Callback function that will handle received data
 		 */
 		persons: function (callback) {
@@ -44,35 +50,46 @@ var personModel = (function () {
 					console.log("Persons request error! textStatus: " + textStatus);
 					return;
 				}
-				convertBornDate(data);
+				decodeBornDate(data);
 				if (typeof callback === "function") {
 					callback(data);
 				}
 			}, "json");
 		},
 		
+		/**
+		 * Asynchronous request for person by it id.
+		 * @param id Id of person
+		 * @param callback Callback function that will handle received data
+		 */
 		getPerson: function (id, callback) {
 			$.get(url + "/" + id, function (data, textStatus, xhr) {
 				if (textStatus !== "success") {
 					console.log("Persons request error! textStatus: " + textStatus);
 					return;
 				}
-				convertBornDate(data);
+				decodeBornDate(data);
 				if (typeof callback === "function") {
 					callback(data);
 				}
 			}, "json");
 		},
 		
+		/**
+		 * Asynchronous request for post date to the server.
+		 * @param sentData JSON data that will be sent
+		 * @param callback Callback function that will handle received data.
+		 */
 		addPerson: function (sentData, callback) {
+			encodeBornDate(sentData);
 			$.ajax({
 				url: url,
 				type: "post",
-				data: sentData,
+				data: JSON.stringify(sentData),
 				contentType: "application/json; charset=utf-8",
 				dataType: "json",
 				success: function (data, textStatus, xhr) {
-					convertBornDate(data);
+					decodeBornDate(data);
 					if (typeof callback === "function") {
 						callback(data);
 					}
@@ -197,8 +214,8 @@ var sendFormData = function () {
 	$("form#edit-form input").each(function (i, e) {
 		person[e.getAttribute("name")] = e.value;
 	});
-	person["bornDate"] = dateToTimestamp(person["bornDate"]);
-	personModel.addPerson(JSON.stringify(person), function (data) {
+
+	personModel.addPerson(person, function (data) {
 		personTable.setBody(data);
 	});
 	clearForm();
