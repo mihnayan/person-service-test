@@ -4,6 +4,20 @@
 
 "use strict";
 
+/**
+ * Module represents methods for working with Person data.
+ * Person data is JSON that has format:
+ * {id: Number,
+ *  surname: String,
+ *  name: String,
+ *  patronymic: String,
+ *  bornDate: String
+ * }
+ * 
+ * bornDate value must has format "dd.mm.YYYY".
+ * 
+ * Before sending person data to the server bornDate value is converted to a timestamp.
+ */
 var personModel = (function () {
 
 	var url = "/person/service";
@@ -95,7 +109,7 @@ var personModel = (function () {
 					}
 				}
 			})
-		}
+		},
 	}
 }());
 
@@ -196,7 +210,7 @@ var clearForm = function () {
 
 var loadFormData = function (id) {
 	var selected = $("input:radio[name='personId']:checked");
-	if (selected.lenght <= 0) {
+	if (selected.length <= 0) {
 		return;
 	}
 	var selectedId = selected.val();
@@ -227,6 +241,19 @@ var cancelForm = function () {
 }
 
 $(document).ready(function () {
+	$("form#edit-form").on("submit", function (e) {
+		e.preventDefault();
+		var form = document.getElementById("edit-form");
+		if (form.checkValidity()) {
+			sendFormData();
+		}
+	});
+	
+	$("button#cancel").on("click", function (e) {
+		e.preventDefault();
+		cancelForm();
+	})
+	
 	new JsDatePick({
 		useMode: 2,
 		target: "borndate-text",

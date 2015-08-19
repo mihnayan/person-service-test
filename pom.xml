@@ -21,6 +21,7 @@
         <configuration>
           <warSourceDirectory>WebContent</warSourceDirectory>
           <failOnMissingWebXml>false</failOnMissingWebXml>
+          <warname>${war-filename}</warname>
         </configuration>
       </plugin>
     </plugins>
@@ -37,4 +38,7 @@
   		<version>2.0.1</version>
   	</dependency>
   </dependencies>
+  <properties>
+  	<war-filename>person.war</war-filename>
+  </properties>
 </project>
