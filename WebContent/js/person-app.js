@@ -202,10 +202,11 @@ var sendFormData = function () {
 		personTable.setBody(data);
 	});
 	clearForm();
-}
+};
 
-var editPersonData = function () {
-	
+var cancelForm = function () {
+	hideForm();
+	clearForm();
 }
 
 $(document).ready(function () {

@@ -17,9 +17,6 @@
 		max-width: 800px;
 		margin-bottom: 3px;
 	}
-	div#command-buttons {
-		text-align: right;	
-	}
 	div#form {
 		margin: 5px;
 		display: none;
@@ -56,23 +53,28 @@
 						</tr>
 						<tr>
 							<td><label for="surname-text">Фамилия</label></td>
-							<td><input type="text" id="surname-text" name="surname" placeholder="Фамилия"></td>
+							<td><input type="text" id="surname-text" name="surname" 
+								placeholder="Фамилия" required></td>
 						</tr>
 						<tr>
 							<td><label for="name-text">Имя</label></td>
-							<td><input type="text" id="name-text" name="name" placeholder="Имя"></td>
+							<td><input type="text" id="name-text" name="name" 
+								placeholder="Имя" required></td>
 						</tr>
 						<tr>
 							<td><label for="patronymic-text">Отчество</label></td>
-							<td><input type="text" id="patronymic-text" name="patronymic" placeholder="Отчество"></td>
+							<td><input type="text" id="patronymic-text" name="patronymic" 
+								placeholder="Отчество"></td>
 						</tr>
 						<tr>
 							<td><label for="borndate-text">Дата рождения</label></td>
-							<td><input type="text" id="borndate-text" name="bornDate" placeholder="Дата рождения"></td>
+							<td><input type="text" id="borndate-text" name="bornDate" 
+								placeholder="01.01.1970" required></td>
 						</tr>
 					</table>
 				</form>
 				<button onclick="sendFormData()">Отправить</button>
+				<button onclick="cancelForm()">Отмена</button>
 			</div>
 		</div>
 	
