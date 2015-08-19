@@ -39,6 +39,6 @@
   	</dependency>
   </dependencies>
   <properties>
-  	<war-filename>person.war</war-filename>
+  	<war-filename>person</war-filename>
   </properties>
 </project>
