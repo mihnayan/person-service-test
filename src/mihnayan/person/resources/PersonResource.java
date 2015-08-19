@@ -40,7 +40,9 @@ public class PersonResource {
 	@Consumes("application/json")
 	@Produces("application/json")
 	public List<Person> createPerson(Person person) {
-		person.setId(PersonService.nextId());
+		if (person.getId() == 0) {
+			person.setId(PersonService.nextId());
+		}
 		PersonService.addPerson(person);
 		return PersonService.getPersons();
 	}
